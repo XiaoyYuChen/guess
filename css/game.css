@@ -1,0 +1,527 @@
+/* ================= 答题页 ================= */
+.game-screen {
+  background: #e9e4d8;
+}
+
+.game-loading {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: url('../assets/images/bg-01.jpg') center / cover no-repeat;
+  color: #4a4335;
+  font-family: var(--brush);
+  font-size: 22px;
+  letter-spacing: 2px;
+}
+
+.loading-ink {
+  width: 46px;
+  height: 46px;
+  border-radius: 50% 50% 48% 52%;
+  background: radial-gradient(circle at 38% 34%, #5a5346, #1d1b16 72%);
+  animation: ink-breathe 1.4s ease-in-out infinite;
+}
+
+/* 顶栏 */
+.game-topbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: calc(52px + var(--safe-top));
+  padding: var(--safe-top) 12px 0;
+  background: linear-gradient(180deg, #3a3a38, #262624);
+  color: #f4ecda;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+  order: 0;
+  z-index: 3;
+}
+
+.game-back {
+  width: 38px;
+  height: 34px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(250, 242, 224, 0.9);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+.game-back img {
+  width: 20px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.game-back:active {
+  transform: translateY(1px);
+}
+
+.hud-stars {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.hud-stars img {
+  width: 22px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.hud-timer {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5px;
+}
+
+.hud-timer::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #d8a841;
+  box-shadow: 0 0 6px rgba(216, 168, 65, 0.8);
+}
+
+.hud-timer.is-warning {
+  color: #ffd9cd;
+  background: rgba(190, 55, 38, 0.45);
+}
+
+.hud-timer.is-warning::before {
+  background: #ff6a4d;
+  animation: dot-blink 0.8s steps(2) infinite;
+}
+
+/* 已揭示的诗句信息：叠在配图顶部，不占位 */
+.game-info {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  padding: 10px 18px 0;
+  text-align: center;
+  max-height: 40%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  pointer-events: none;
+}
+
+.game-info:empty {
+  padding: 0;
+}
+
+.poem-line {
+  font-family: var(--brush);
+  line-height: 1.28;
+  color: #a5392c;
+  text-shadow: 0 1px 2px rgba(255, 252, 240, 0.95), 0 0 10px rgba(255, 252, 240, 0.85);
+}
+
+.poem-title {
+  font-size: 29px;
+  letter-spacing: 4px;
+}
+
+.poem-meta {
+  margin: 6px 0 8px;
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: #7b5a3c;
+}
+
+.poem-verse {
+  font-size: 20px;
+  letter-spacing: 3px;
+  color: #4a3f33;
+}
+
+.poem-line.is-new {
+  animation: brush-in 0.4s ease both;
+}
+
+/* 答案格：背景完全透明，透出配图 */
+.game-answer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 2px 12px 4px;
+  min-height: 50px;
+  flex-wrap: wrap;
+}
+
+.answer-bracket {
+  font-family: var(--brush);
+  font-size: 30px;
+  line-height: 1;
+  color: #9d7b3c;
+}
+
+.answer-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 38px;
+  border: 1.5px dashed rgba(167, 132, 62, 0.9);
+  border-radius: 4px;
+  background: transparent;
+  font-family: var(--brush);
+  font-size: 22px;
+  color: #2b2822;
+  text-shadow: 0 1px 2px rgba(255, 252, 240, 0.95), 0 0 8px rgba(255, 252, 240, 0.8);
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.answer-slot.is-filled {
+  border-style: solid;
+  border-color: rgba(122, 94, 42, 0.9);
+  background: transparent;
+}
+
+.game-answer.is-long .answer-slot {
+  width: 28px;
+  height: 32px;
+  font-size: 18px;
+}
+
+.game-answer.is-wrong .answer-slot {
+  border-color: #b03a2c;
+  background: transparent;
+  color: #b03a2c;
+  animation: shake 0.28s ease;
+}
+
+/* 提示条 */
+.game-hint {
+  flex: none;
+  margin: 0 14px;
+  padding: 7px 12px;
+  border-radius: 9px;
+  background: linear-gradient(180deg, rgba(72, 68, 60, 0.92), rgba(46, 44, 39, 0.92));
+  color: #f4ecda;
+  font-size: 13px;
+  text-align: center;
+  letter-spacing: 0.5px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 配图：顶栏与底部按钮之间的整块区域，固定尺寸，所有内容叠在其上 */
+.game-image-wrap {
+  order: 1;
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0;
+  border-radius: 0;
+  overflow: hidden;
+  background: #ddd7c9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 底部叠层：提示 + 答案格 + 字阵 */
+.game-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 2px;
+}
+
+.game-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.game-image-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--brush);
+  font-size: 18px;
+  color: #8b8170;
+  background: repeating-linear-gradient(135deg, #e4ded0, #e4ded0 12px, #ded7c7 12px, #ded7c7 24px);
+}
+
+/* 字阵：面板背景透明，只保留汉字格 */
+.game-matrix-panel {
+  flex: none;
+  padding: 2px 12px 4px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.game-matrix {
+  --cols: 6;
+  --rows: 6;
+  --cell: 44px;
+  --gap: 6px;
+  --font: 22px;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), var(--cell));
+  grid-auto-rows: var(--cell);
+  gap: var(--gap);
+  justify-content: center;
+}
+
+.matrix-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--cell);
+  height: var(--cell);
+  border: 1px solid rgba(118, 109, 92, 0.45);
+  border-radius: 5px;
+  background: linear-gradient(180deg, #fdfbf6, #f0ebdf);
+  box-shadow: 0 1px 2px rgba(60, 50, 34, 0.12);
+  font-family: 'KaiTi', 'STKaiti', 'Songti SC', serif;
+  font-size: var(--font);
+  color: #2b2822;
+  user-select: none;
+  transition: transform 0.1s ease, opacity 0.12s ease, background 0.12s ease;
+}
+
+.matrix-cell:active {
+  transform: scale(0.9);
+}
+
+.matrix-cell.is-used {
+  opacity: 0.22;
+  pointer-events: none;
+  transform: scale(0.92);
+}
+
+/* 底部操作 */
+.game-actions {
+  order: 2;
+  flex: none;
+  padding: 2px 12px calc(10px + var(--safe-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.submit-btn {
+  position: relative;
+  width: 100%;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #4a4034, #241f18);
+  box-shadow: 0 4px 0 rgba(24, 19, 12, 0.42), 0 6px 14px rgba(30, 24, 16, 0.22);
+  font-family: var(--brush);
+  font-size: 23px;
+  letter-spacing: 2px;
+  color: #f8f0dd;
+  transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.submit-btn:disabled {
+  background: linear-gradient(180deg, #b6ae9f, #948d80);
+  box-shadow: none;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.submit-btn.is-ready {
+  background: linear-gradient(180deg, #6a5631, #2f2617);
+  color: #fffaf0;
+  box-shadow: 0 4px 0 rgba(24, 19, 12, 0.42), 0 0 16px rgba(216, 168, 65, 0.5);
+  animation: ready-glow 1.6s ease-in-out infinite;
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(24, 19, 12, 0.42);
+}
+
+.action-row {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  flex: 1;
+  min-height: 40px;
+  padding: 6px 4px;
+  border: 1.5px solid rgba(105, 88, 60, 0.55);
+  border-radius: 9px;
+  background: linear-gradient(180deg, #fbf3e2, #e7d8b8);
+  box-shadow: 0 2px 0 rgba(70, 56, 30, 0.25);
+  font-family: var(--brush);
+  font-size: 17px;
+  color: #3a3327;
+  letter-spacing: 0.5px;
+  transition: transform 0.1s ease, opacity 0.15s ease;
+}
+
+.action-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.action-btn.is-disabled,
+.action-btn:disabled {
+  opacity: 0.45;
+  filter: grayscale(0.4);
+}
+
+/* 预览 */
+.preview-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: none;
+  background: rgba(12, 14, 17, 0.94);
+}
+
+.preview-layer.is-visible {
+  display: block;
+  animation: fade-in 0.28s ease both;
+}
+
+.preview-layer.is-hidden {
+  display: none;
+}
+
+.preview-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.preview-count {
+  position: absolute;
+  top: calc(16px + var(--safe-top));
+  right: 16px;
+  min-width: 54px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(244, 236, 218, 0.92);
+  color: #2b2822;
+  font-family: var(--brush);
+  font-size: 21px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.preview-skip {
+  position: absolute;
+  bottom: calc(26px + var(--safe-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 30px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(244, 236, 218, 0.55);
+  background: rgba(244, 236, 218, 0.12);
+  color: #f4ecda;
+  font-family: var(--brush);
+  font-size: 21px;
+  letter-spacing: 3px;
+}
+
+.preview-skip:active {
+  background: rgba(244, 236, 218, 0.24);
+}
+
+.preview-skip[hidden] {
+  display: none;
+}
+
+/* 红边警报 */
+.red-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  box-shadow: inset 0 0 26px 8px rgba(200, 38, 24, 0.85),
+    inset 0 0 90px 24px rgba(200, 38, 24, 0.35);
+}
+
+.red-vignette.is-on {
+  opacity: 1;
+  animation: red-pulse 1s ease-in-out infinite;
+}
+
+@media (max-height: 700px) {
+  .game-info {
+    max-height: 18%;
+    padding-top: 4px;
+  }
+  .poem-title {
+    font-size: 25px;
+  }
+  .poem-meta {
+    margin: 4px 0 6px;
+    font-size: 16px;
+  }
+  .poem-verse {
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
+  .answer-slot {
+    width: 30px;
+    height: 33px;
+    font-size: 19px;
+  }
+  .game-answer {
+    min-height: 44px;
+    padding-top: 4px;
+  }
+  .game-actions {
+    gap: 5px;
+  }
+  .submit-btn {
+    height: 40px;
+    font-size: 20px;
+  }
+  .action-btn {
+    min-height: 34px;
+    font-size: 15px;
+  }
+}
