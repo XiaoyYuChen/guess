@@ -452,19 +452,33 @@
   position: absolute;
   bottom: calc(26px + var(--safe-bottom));
   left: 50%;
+  min-width: 168px;
+  padding: 12px 44px;
   transform: translateX(-50%);
-  padding: 8px 30px;
   border-radius: 999px;
-  border: 1.5px solid rgba(244, 236, 218, 0.55);
-  background: rgba(244, 236, 218, 0.12);
-  color: #f4ecda;
+  border: 2px solid rgba(255, 248, 232, 0.9);
+  background: linear-gradient(180deg, #f7e9c8, #e2b96a);
+  color: #3a2a12;
   font-family: var(--brush);
-  font-size: 21px;
-  letter-spacing: 3px;
+  font-size: 25px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 0 6px rgba(244, 236, 218, 0.1);
+  animation: skip-breathe 1.8s ease-in-out infinite;
 }
 
 .preview-skip:active {
-  background: rgba(244, 236, 218, 0.24);
+  background: linear-gradient(180deg, #fff4dc, #edc77c);
+  transform: translateX(-50%) scale(0.96);
+}
+
+@keyframes skip-breathe {
+  0%, 100% {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 0 6px rgba(244, 236, 218, 0.1);
+  }
+  50% {
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5), 0 0 0 12px rgba(244, 236, 218, 0.18);
+  }
 }
 
 .preview-skip[hidden] {

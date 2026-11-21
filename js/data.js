@@ -73,9 +73,15 @@ export async function getDetail(kind, id) {
   return item;
 }
 
+/** iPad 自包含版会把素材内嵌为 data URI，存在映射时优先使用。 */
+function assetUrl(url) {
+  const map = typeof window !== 'undefined' ? window.__ASSET_MAP__ : null;
+  return (map && map[url]) || url;
+}
+
 export function imageUrl(imageKey) {
   if (!imageKey) return '';
-  return `${PATHS.images}/${String(imageKey).replace(/^\/+/, '')}`;
+  return assetUrl(`${PATHS.images}/${String(imageKey).replace(/^\/+/, '')}`);
 }
 
 export function preloadImage(imageKey) {

@@ -1,4 +1,4 @@
-import { getLevels } from '../data.js';
+import { getLevels, imageUrl } from '../data.js';
 import { state } from '../state.js';
 import { getBest, getMaxUnlocked, setSelectKind } from '../storage.js';
 import { navigate } from '../router.js';
@@ -11,7 +11,7 @@ const scrollMemory = { poetry: 0, idiom: 0 };
 function starsHtml(stars) {
   let html = '';
   for (let i = 0; i < 3; i++) {
-    html += `<img src="assets/images/${i < stars ? 'star-fill.png' : 'star-border.png'}" alt="">`;
+    html += `<img src="${imageUrl(i < stars ? 'star-fill.png' : 'star-border.png')}" alt="">`;
   }
   return html;
 }
@@ -41,8 +41,8 @@ function buildCard(item, kind) {
     <span class="level-side">
       <span class="level-time">${time}</span>
     </span>
-    ${completed ? '<img class="pass-stamp" src="assets/images/pass.png" alt="已通关">' : ''}
-    ${locked ? '<img class="lock-icon" src="assets/images/locked.png" alt="未解锁">' : ''}
+    ${completed ? `<img class="pass-stamp" src="${imageUrl('pass.png')}" alt="已通关">` : ''}
+    ${locked ? `<img class="lock-icon" src="${imageUrl('locked.png')}" alt="未解锁">` : ''}
   `;
   return card;
 }
@@ -61,7 +61,7 @@ export function mount(root, params) {
         <div class="levels-head-row">
           <h1 class="levels-title">关卡选择</h1>
           <button class="settings-gear" type="button" aria-label="设置">
-            <img src="assets/images/setting.png" alt="">
+            <img src="${imageUrl('setting.png')}" alt="">
           </button>
         </div>
         <div class="level-tabs" role="tablist">

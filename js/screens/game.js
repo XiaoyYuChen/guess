@@ -27,8 +27,8 @@ import { resolveOutcome, openSettlement } from '../game/settlement.js';
 import { escapeHtml, formatSeconds, sleep } from '../utils.js';
 
 const STAR_SRC = {
-  fill: 'assets/images/star-fill.png',
-  border: 'assets/images/star-border.png',
+  fill: imageUrl('star-fill.png'),
+  border: imageUrl('star-border.png'),
 };
 
 function starRowHtml(stars) {
@@ -118,7 +118,7 @@ export function mount(root, params) {
       <section class="screen game-screen is-active">
         <div class="game-topbar">
           <button class="game-back" type="button" aria-label="返回">
-            <img src="assets/images/return.png" alt="">
+            <img src="${imageUrl('return.png')}" alt="">
           </button>
           <div class="hud-stars">${starRowHtml(0)}</div>
           <div class="hud-timer"><span>${TIMING.challengeSec}s</span></div>

@@ -1,5 +1,6 @@
 import { ASSIST_MAX } from '../config.js';
 import { getProfile, saveProfile, resetSettings, resetProgress } from '../storage.js';
+import { imageUrl } from '../data.js';
 import { navigate } from '../router.js';
 import { state } from '../state.js';
 import { setMusicEnabled, setSfxEnabled, playSfx } from '../audio.js';
@@ -13,22 +14,22 @@ export function mount(root) {
       <div class="settings-bg"></div>
       <div class="settings-vignette"></div>
       <header class="page-title-wrap">
-        <img class="page-title-brush" src="assets/images/Decorate.png" alt="">
+        <img class="page-title-brush" src="${imageUrl('Decorate.png')}" alt="">
         <h1 class="page-title">设置</h1>
       </header>
       <div class="settings-panel">
         <div class="setting-row" data-key="sfxEnabled">
-          <img class="setting-icon" src="assets/images/settings/voice.png" alt="">
+          <img class="setting-icon" src="${imageUrl('settings/voice.png')}" alt="">
           <span class="setting-label">声音</span>
           <button class="switch" type="button" aria-label="声音开关" aria-pressed="${profile.sfxEnabled}">
-            <img src="assets/images/settings/${profile.sfxEnabled ? 'switch-open.png' : 'switch-close.png'}" alt="">
+            <img src="${imageUrl(profile.sfxEnabled ? 'settings/switch-open.png' : 'settings/switch-close.png')}" alt="">
           </button>
         </div>
         <div class="setting-row" data-key="musicEnabled">
-          <img class="setting-icon" src="assets/images/settings/musice.png" alt="">
+          <img class="setting-icon" src="${imageUrl('settings/musice.png')}" alt="">
           <span class="setting-label">音乐</span>
           <button class="switch" type="button" aria-label="音乐开关" aria-pressed="${profile.musicEnabled}">
-            <img src="assets/images/settings/${profile.musicEnabled ? 'switch-open.png' : 'switch-close.png'}" alt="">
+            <img src="${imageUrl(profile.musicEnabled ? 'settings/switch-open.png' : 'settings/switch-close.png')}" alt="">
           </button>
         </div>
       </div>
@@ -79,7 +80,7 @@ export function mount(root) {
     const enabled = !!p[key];
     btn.setAttribute('aria-pressed', String(enabled));
     const img = btn.querySelector('img');
-    img.src = `assets/images/settings/${enabled ? 'switch-open.png' : 'switch-close.png'}`;
+    img.src = imageUrl(enabled ? 'settings/switch-open.png' : 'settings/switch-close.png');
   }
 
   function bindSwitch(key) {

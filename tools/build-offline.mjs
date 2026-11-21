@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 
 const ROOT = 'D:\\AIProjects\\guess';
 const DIST = path.join(ROOT, '离线版');
@@ -123,7 +124,8 @@ const css = ['css/base.css', 'css/screens.css', 'css/game.css', 'css/animations.
   .join('\n')
   .replace(/url\('\.\.\/assets\//g, "url('assets/");
 
-const runtime = `
+function buildRuntime(extraHead = '') {
+  return `
 (function () {
 'use strict';
 var __modules = {};
@@ -135,22 +137,25 @@ function __req(id) {
   __modules[id](m, m.exports, __req);
   return m.exports;
 }
+${extraHead}
 window.__GUESS_OFFLINE_DATA__ = ${dataJson};
 ${modules}
 __req('main');
 })();
 `.replace(/<\/script/gi, '<\\/script');
+}
 
-const html = `<!DOCTYPE html>
+function wrapHtml(title, cssText, runtime) {
+  return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#1c2430">
 <link rel="icon" href="data:,">
-<title>看图猜诗词 · 猜成语（离线版）</title>
+<title>${title}</title>
 <style>
-${css}
+${cssText}
 </style>
 </head>
 <body>
@@ -164,6 +169,28 @@ ${runtime}
 </body>
 </html>
 `;
+}
+
+const html = wrapHtml('看图猜诗词 · 猜成语（离线版）', css, buildRuntime());
+
+/** iPad 自包含版：图片、音频、字体全部内嵌为 data URI，不再依赖 assets 目录。 */
+function buildIpad() {
+  execFileSync('python', [path.join(ROOT, 'tools', 'ipad-assets.py')], { stdio: 'inherit' });
+  const raw = JSON.parse(fs.readFileSync(path.join(DIST, '.ipad-assets.json'), 'utf8'));
+  const assets = raw.assets;
+  const assetsJson = JSON.stringify(assets);
+  const fontKey = 'assets/fonts/MaShanZheng-Regular.ttf';
+  const ipadCss = css.replace(/url\((['"]?)([^)'"]+)\1\)/g, (match, quote, url) => {
+    if (url === fontKey && raw.font) return `url('${raw.font}')`;
+    return assets[url] ? `url('${assets[url]}')` : match;
+  });
+  const ipadRuntime = buildRuntime(`window.__ASSET_MAP__ = ${assetsJson};`);
+  const ipadHtml = wrapHtml('看图猜诗词 · 猜成语（iPad 离线版）', ipadCss, ipadRuntime);
+  const out = path.join(DIST, '看图猜诗词-iPad.html');
+  fs.writeFileSync(out, ipadHtml, 'utf8');
+  console.log(`built ${out}`);
+  console.log(`size ${(Buffer.byteLength(ipadHtml) / 1048576).toFixed(2)} MB`);
+}
 
 function copyDir(src, dest) {
   fs.mkdirSync(dest, { recursive: true });
@@ -185,4 +212,6 @@ if (!fs.existsSync(imageDir) || fs.readdirSync(imageDir).length === 0) {
 }
 console.log(`built ${OUT}`);
 console.log(`size ${(Buffer.byteLength(html) / 1048576).toFixed(2)} MB, details ${Object.keys(details).length}, modules ${JS_FILES.length}, images ${fs.readdirSync(imageDir).length}`);
+
+buildIpad();
 

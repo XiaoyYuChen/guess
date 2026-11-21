@@ -45,9 +45,14 @@ const PENTA = [293.66, 349.23, 392.0, 440.0, 523.25];
 const BASS_FREQ = 146.83;
 const MELODY = [0, 2, 3, 4, 3, 2, 1, 0, 2, 4, 3, 1, 0, -1, 0, -1];
 
+function assetUrl(url) {
+  const map = typeof window !== 'undefined' ? window.__ASSET_MAP__ : null;
+  return (map && map[url]) || url;
+}
+
 function sfxUrl(name) {
   const file = SFX_FILES[name];
-  return file ? `${PATHS.sfx}/${file}` : '';
+  return file ? assetUrl(`${PATHS.sfx}/${file}`) : '';
 }
 
 export function configureAudio(profile) {
@@ -181,7 +186,7 @@ function startTrackBgm() {
   if (bgm && !bgm.paused) return;
   const file = BGM_TRACKS[bgmIndex % BGM_TRACKS.length];
   try {
-    bgm = new Audio(`${PATHS.bgm}/${file}`);
+    bgm = new Audio(assetUrl(`${PATHS.bgm}/${file}`));
     bgm.volume = 0.32;
     bgm.addEventListener('ended', () => {
       bgmIndex = (bgmIndex + 1) % BGM_TRACKS.length;

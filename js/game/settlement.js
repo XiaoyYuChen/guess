@@ -1,5 +1,6 @@
 import { REWARDS, SETTLEMENT_STARS } from '../config.js';
 import { getBest, getMaxUnlocked, setMaxUnlocked, recordBest } from '../storage.js';
+import { imageUrl } from '../data.js';
 import { formatTimeMs } from '../utils.js';
 
 export function resolveOutcome(options) {
@@ -45,7 +46,7 @@ function starRow(stars) {
   wrap.className = 'settlement-stars';
   for (let i = 0; i < SETTLEMENT_STARS; i++) {
     const img = document.createElement('img');
-    img.src = i < stars ? 'assets/images/star-fill.png' : 'assets/images/star-border.png';
+    img.src = imageUrl(i < stars ? 'star-fill.png' : 'star-border.png');
     img.alt = i < stars ? '已获得星' : '未获得星';
     img.className = i < stars ? 'star is-earned' : 'star';
     img.style.animationDelay = `${0.12 * i + 0.1}s`;
@@ -139,7 +140,7 @@ export function openSettlement(options) {
   const replay = document.createElement('button');
   replay.type = 'button';
   replay.className = 'settlement-icon-btn';
-  replay.innerHTML = '<img src="assets/images/poems-select/retry.png" alt=""><span>再玩一次</span>';
+  replay.innerHTML = `<img src="${imageUrl('poems-select/retry.png')}" alt=""><span>再玩一次</span>`;
   replay.addEventListener('click', () => { close(); onReplay && onReplay(); });
   grid.appendChild(replay);
 
@@ -147,7 +148,7 @@ export function openSettlement(options) {
     const storyBtn = document.createElement('button');
     storyBtn.type = 'button';
     storyBtn.className = 'settlement-icon-btn';
-    storyBtn.innerHTML = '<img src="assets/images/poems-select/book.png" alt=""><span>成语故事</span>';
+    storyBtn.innerHTML = `<img src="${imageUrl('poems-select/book.png')}" alt=""><span>成语故事</span>`;
     storyBtn.addEventListener('click', () => { onStory && onStory(detail.story); });
     grid.appendChild(storyBtn);
   }
@@ -157,7 +158,7 @@ export function openSettlement(options) {
   const back = document.createElement('button');
   back.type = 'button';
   back.className = 'settlement-back';
-  back.innerHTML = '<img src="assets/images/return.png" alt=""><span>返回</span>';
+  back.innerHTML = `<img src="${imageUrl('return.png')}" alt=""><span>返回</span>`;
   back.addEventListener('click', () => { close(); onBack && onBack(); });
   actions.appendChild(back);
 

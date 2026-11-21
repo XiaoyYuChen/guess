@@ -1,5 +1,6 @@
 import { navigate } from '../router.js';
 import { state } from '../state.js';
+import { imageUrl } from '../data.js';
 import { playSfx } from '../audio.js';
 
 const CC0_NOTICE = 'CC0 1.0 通用公共领域贡献声明（即放弃版权，允许自由使用、复制、修改和表演，无需署名，亦无任何担保）';
@@ -19,7 +20,7 @@ export function mount(root) {
       <div class="settings-bg"></div>
       <div class="settings-vignette"></div>
       <header class="page-title-wrap">
-        <img class="page-title-brush" src="assets/images/Decorate.png" alt="">
+        <img class="page-title-brush" src="${imageUrl('Decorate.png')}" alt="">
         <h1 class="page-title">游戏声明</h1>
       </header>
       <div class="declaration-card">
@@ -27,7 +28,7 @@ export function mount(root) {
       </div>
       <div class="declaration-actions">
         <button class="settings-btn wide" type="button">
-          <img src="assets/images/settings/return.png" alt=""><span>返回</span>
+          <span>返回</span>
         </button>
       </div>
     </section>`;
